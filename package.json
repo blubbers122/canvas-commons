@@ -1,13 +1,16 @@
 {
-  "name": "@hhenrichsen/canvas-commons",
+  "name": "@blubbers122/canvas-commons",
   "description": "Common utilities for working with Motion Canvas",
-  "repository": "https://github.com/hhenrichsen/canvas-commons",
+  "repository": "https://github.com/blubbers122/canvas-commons",
   "version": "0.10.2",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
     "prepare": "husky install",
     "build:dev": "rollup -c rollup.config.mjs",
+    "release": "npm run build && npm version patch && npm publish --verbose --access restricted",
+    "release:minor": "npm run build && npm version minor && npm publish --verbose --access restricted",
+    "release:major": "npm run build && npm version major && npm publish --verbose --access restricted",
     "watch": "rollup -c rollup.config.mjs -w",
     "build": "rollup -c rollup.config.mjs",
     "prebuild": "rimraf ./lib",
@@ -24,14 +27,14 @@
   "dependencies": {
     "@codemirror/language": "^6.10.1",
     "@lezer/highlight": "^1.2.0",
-    "@motion-canvas/2d": "^3.17.1",
-    "@motion-canvas/core": "^3.17.0",
-    "@motion-canvas/ffmpeg": "^3.17.0"
+    "@motion-canvas/2d": "^3.18.0-alpha.0",
+    "@motion-canvas/core": "^3.18.0-alpha.0",
+    "@motion-canvas/ffmpeg": "^3.18.0-alpha.0"
   },
   "devDependencies": {
     "@lezer/javascript": "^1.4.16",
-    "@motion-canvas/ui": "^3.17.0",
-    "@motion-canvas/vite-plugin": "^3.17.0",
+    "@motion-canvas/ui": "^3.18.0-alpha.0",
+    "@motion-canvas/vite-plugin": "^3.18.0-alpha.0",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.1.6",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
