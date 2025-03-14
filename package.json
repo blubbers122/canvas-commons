@@ -22,7 +22,8 @@
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
     "serve": "vite",
-    "test": "vitest"
+    "test": "vitest",
+    "start": "vite"
   },
   "dependencies": {
     "@codemirror/language": "^6.10.1",

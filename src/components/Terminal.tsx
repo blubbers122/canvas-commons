@@ -1,14 +1,14 @@
 import {Colors} from '@Colors';
 import {
   Layout,
+  LayoutProps,
+  Node,
   Rect,
   Txt,
   TxtProps,
   computed,
   initial,
   signal,
-  Node,
-  LayoutProps,
 } from '@motion-canvas/2d';
 import {
   SignalValue,
@@ -26,9 +26,7 @@ export interface TerminalProps extends LayoutProps {
 }
 
 export class Terminal extends Layout {
-  private internalCanvas: CanvasRenderingContext2D = document
-    .createElement('canvas')
-    .getContext('2d');
+  private internalCanvas: CanvasRenderingContext2D;
 
   @initial('❯ ')
   @signal()
@@ -100,6 +98,7 @@ export class Terminal extends Layout {
     super({
       ...props,
     });
+    this.internalCanvas = document.createElement('canvas').getContext('2d');
     this.cachedLines = createSignal([]);
     this.lines = createSignal([]);
     this.layout(true);
