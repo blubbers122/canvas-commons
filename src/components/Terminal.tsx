@@ -6,7 +6,6 @@ import {
   Rect,
   Txt,
   TxtProps,
-  computed,
   initial,
   signal,
 } from '@motion-canvas/2d';
@@ -26,9 +25,7 @@ export interface TerminalProps extends LayoutProps {
 }
 
 export class Terminal extends Layout {
-  private internalCanvas: CanvasRenderingContext2D = document
-    .createElement('canvas')
-    .getContext('2d');
+  private internalCanvas: CanvasRenderingContext2D;
 
   @initial('❯ ')
   @signal()
@@ -47,68 +44,71 @@ export class Terminal extends Layout {
   public declare readonly wpm: SimpleSignal<number>;
 
   private lines: SimpleSignal<TxtProps[][]>;
-  private cachedLines: SimpleSignal<Node[]>;
+  // private cachedLines: SimpleSignal<Node[]>;
 
-  @computed()
+  // @computed()
   private getLines(): Node[] {
-    return this.lines()
-      .slice(this.cachedLines().length)
-      .map(fragments => {
-        return (
-          <Layout direction={'row'} paddingLeft={20} shrink={0}>
-            {fragments.length ? (
-              fragments.map(fragment => {
-                const parentedDefaults = {
-                  ...this.defaultTxtProps(),
-                  ...fragment,
-                };
-                this.internalCanvas.font = `${unwrap(parentedDefaults.fontWeight) || 400} ${unwrap(parentedDefaults.fontSize)}px ${unwrap(parentedDefaults.fontFamily)}`;
-                const spc = this.internalCanvas.measureText(' ');
-                return unwrap(fragment.text)
-                  .split(/( )/g)
-                  .filter(Boolean)
-                  .map(spaceOrText => {
-                    if (spaceOrText == ' ') {
+    return (
+      this.lines()
+        // .slice(this.cachedLines().length)
+        .map(fragments => {
+          return (
+            <Layout direction={'row'} paddingLeft={20} shrink={0}>
+              {fragments.length ? (
+                fragments.map(fragment => {
+                  const parentedDefaults = {
+                    ...this.defaultTxtProps(),
+                    ...fragment,
+                  };
+                  this.internalCanvas.font = `${unwrap(parentedDefaults.fontWeight) || 400} ${unwrap(parentedDefaults.fontSize)}px ${unwrap(parentedDefaults.fontFamily)}`;
+                  const spc = this.internalCanvas.measureText(' ');
+                  return unwrap(fragment.text)
+                    .split(/( )/g)
+                    .filter(Boolean)
+                    .map(spaceOrText => {
+                      if (spaceOrText == ' ') {
+                        return (
+                          <Rect
+                            minWidth={spc.width}
+                            height={
+                              spc.fontBoundingBoxAscent +
+                              spc.fontBoundingBoxDescent
+                            }
+                          />
+                        );
+                      }
                       return (
-                        <Rect
-                          minWidth={spc.width}
-                          height={
-                            spc.fontBoundingBoxAscent +
-                            spc.fontBoundingBoxDescent
-                          }
+                        <Txt
+                          fill={Colors.Catppuccin.Mocha.Text}
+                          {...parentedDefaults}
+                          text={spaceOrText}
                         />
                       );
-                    }
-                    return (
-                      <Txt
-                        fill={Colors.Catppuccin.Mocha.Text}
-                        {...parentedDefaults}
-                        text={spaceOrText}
-                      />
-                    );
-                  });
-              })
-            ) : (
-              <Rect width={1} height={36} />
-            )}
-          </Layout>
-        );
-      });
+                    });
+                })
+              ) : (
+                <Rect width={1} height={36} />
+              )}
+            </Layout>
+          );
+        })
+    );
   }
 
   public constructor(props: TerminalProps) {
     super({
       ...props,
     });
-    this.cachedLines = createSignal([]);
+    this.internalCanvas = document.createElement('canvas').getContext('2d');
+    // this.cachedLines = createSignal([]);
     this.lines = createSignal([]);
     this.layout(true);
     this.direction('column');
-    this.children(() => [...this.cachedLines(), ...this.getLines()]);
+    this.children(() => [...this.getLines()]);
   }
 
   public lineAppear(line: string | TxtProps | TxtProps[]) {
-    this.cachedLines([...this.cachedLines(), ...this.getLines()]);
+    // this.cachedLines([...this.getLines()]);
     this.lines([...this.lines(), !line ? [] : this.makeProps(line)]);
   }
 
@@ -117,7 +117,7 @@ export class Terminal extends Layout {
     duration: number,
     timingFunction?: TimingFunction,
   ) {
-    this.cachedLines([...this.cachedLines(), ...this.getLines()]);
+    // this.cachedLines([...this.getLines()]);
     const l = createSignal('');
     const t = typeof line == 'string' ? line : line.text;
     const p = this.prefix();
@@ -149,7 +149,7 @@ export class Terminal extends Layout {
     duration?: number,
     timingFunction: TimingFunction = linear,
   ) {
-    this.cachedLines(this.cachedLines().slice(0, -1));
+    // this.cachedLines(this.cachedLines().slice(0, -1));
     const t = typeof line == 'string' ? line : line.text;
     const calcDuration = duration ?? (t.length / (this.wpm() * 5)) * 60;
     const l = createSignal('');
@@ -177,7 +177,7 @@ export class Terminal extends Layout {
   }
 
   public appearAfterLine(line: string | TxtProps) {
-    this.cachedLines(this.cachedLines().slice(0, -1));
+    // this.cachedLines(this.cachedLines().slice(0, -1));
     const lastLine = this.lines()[this.lines().length - 1];
 
     lastLine.push(...this.makeProps(line));
@@ -185,12 +185,12 @@ export class Terminal extends Layout {
   }
 
   public replaceLine(newLine: string | TxtProps | TxtProps[]) {
-    this.cachedLines(this.cachedLines().slice(0, -1));
+    // // this.cachedLines(this.cachedLines().slice(0, -1));
     this.lines([...this.lines().slice(0, -1), this.makeProps(newLine)]);
   }
 
   public deleteLine() {
-    this.cachedLines(this.cachedLines().slice(0, -1));
+    // // this.cachedLines(this.cachedLines().slice(0, -1));
     this.lines([...this.lines().slice(0, -1)]);
   }
 
