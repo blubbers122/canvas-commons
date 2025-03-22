@@ -2,7 +2,7 @@
   "name": "@blubbers122/canvas-commons",
   "description": "Common utilities for working with Motion Canvas",
   "repository": "https://github.com/blubbers122/canvas-commons",
-  "version": "0.10.4",
+  "version": "0.10.5",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
