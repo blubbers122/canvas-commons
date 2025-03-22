@@ -26,7 +26,9 @@ export interface TerminalProps extends LayoutProps {
 }
 
 export class Terminal extends Layout {
-  private internalCanvas: CanvasRenderingContext2D;
+  private internalCanvas: CanvasRenderingContext2D = document
+    .createElement('canvas')
+    .getContext('2d');
 
   @initial('❯ ')
   @signal()
@@ -98,7 +100,6 @@ export class Terminal extends Layout {
     super({
       ...props,
     });
-    this.internalCanvas = document.createElement('canvas').getContext('2d');
     this.cachedLines = createSignal([]);
     this.lines = createSignal([]);
     this.layout(true);
